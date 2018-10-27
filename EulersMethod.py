@@ -41,4 +41,4 @@ pyplot.plot(t, z, label='Numerical',
 pyplot.plot(t, z_exact, label='Analytical',
             color='C1', linestyle='-', linewidth=2)
 pyplot.legend();  # set the legend
-plot.show()
+pyplot.show()
