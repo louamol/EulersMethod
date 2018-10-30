@@ -1,10 +1,7 @@
 import numpy
 from matplotlib import pyplot
 
-g = 9.81
-zt = 100.0
-
-def twoDimEulerMethod(t0,T,dt,u0):
+def twoDimEulerMethod(f,t0,T,dt,u0):
     """t0 : valeur initiale de t
        T : valeur finale de t
        dt : intervalle de temps
@@ -19,12 +16,12 @@ def twoDimEulerMethod(t0,T,dt,u0):
     z[0] = u0[1]
 
     for n in range(1, N):
-        u = u + dt * numpy.array([u[1], g * (1 - u[0] / zt)])
+        u = u + dt * f(u)
         z[n] = u[0]
 
     return [t,z]
 
-    def EulerMethodPlot(t,z):
+def EulerMethodPlot(t,z):
     # Set the font family and size to use for Matplotlib figures.
     pyplot.rcParams['font.family'] = 'serif'
     pyplot.rcParams['font.size'] = 16
