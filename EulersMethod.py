@@ -1,44 +1,43 @@
-import numpy
-from matplotlib import pyplot
+g = 9.81
+zt = 100.0
 
-# Create the time grid.
-T = 100.0  # length of the time-interval
-dt = 0.02  # time-step size
-N = int(T / dt) + 1  # number of time steps
-t = numpy.linspace(0.0, T, num=N)  # time grid
+def twoDimEulerMethod(t0,T,dt,u0):
+    """t0 : valeur initiale de t
+       T : valeur finale de t
+       dt : intervalle de temps
+       u0 : condition initial sur u à t = t0
+       Résout une équation du type u'(t) = f(u,t) où u est dans R^n
+       """
 
-# Set the initial conditions.
+    N = int((T-t0) / dt) + 1  # number of time steps
+    t = numpy.linspace(t0, T, num=N)  # time grid
+    u = numpy.array(u0)
+    z = numpy.zeros(N)
+    z[0] = u0[1]
+
+    for n in range(1, N):
+        u = u + dt * numpy.array([u[1], g * (1 - u[0] / zt)])
+        z[n] = u[0]
+
+    return [t,z]
+
+    def EulerMethodPlot(t,z):
+    # Set the font family and size to use for Matplotlib figures.
+    pyplot.rcParams['font.family'] = 'serif'
+    pyplot.rcParams['font.size'] = 16
+
+    # Plot the solution of the elevation.
+    pyplot.figure(figsize=(9.0, 4.0))  # set the size of the figure
+    pyplot.title('Elevation of the phugoid over the time')  # set the title
+    pyplot.xlabel('Time [s]')  # set the x-axis label
+    pyplot.ylabel('Elevation [m]')  # set the y-axis label
+    pyplot.xlim(t[0], t[-1])  # set the x-axis limits
+    pyplot.ylim(40.0, 160.0)  # set the y-axis limits
+    pyplot.grid()  # set a background grid to improve readability
+    pyplot.plot(t, z, color='C0', linestyle='-', linewidth=2);
+
 z0 = 100.0  # altitude
 b0 = 10.0  # upward velocity resulting from gust
-zt = 100.0  # trim altitude
-g = 9.81  # acceleration due to gravity
 
-# Set the initial value of the numerical solution.
-u = numpy.array([z0, b0])
-
-# Create an array to store the elevation value at each time step.
-z = numpy.zeros(N)
-z[0] = z0
-
-# Temporal integration using Euler's method.
-for n in range(1, N):
-    rhs = numpy.array([u[1], g * (1 - u[0] / zt)]) #tableau avec (b_n, )
-    u = u + dt * rhs
-    z[n] = u[0]
-
-z_exact = (b0 * (zt / g)**0.5 * numpy.sin((g / zt)**0.5 * t) +
-           (z0 - zt) * numpy.cos((g / zt)**0.5 * t) + zt)
-# Plot the numerical solution and the exact solution.
-pyplot.figure(figsize=(9.0, 4.0))  # set the size of the figure
-pyplot.title('Elevation of the phugoid over the time')  # set the title
-pyplot.xlabel('Time [s]')  # set the x-axis label
-pyplot.ylabel('Elevation [m]')  # set the y-axis label
-pyplot.xlim(t[0], t[-1])  # set the x-axis limits
-pyplot.ylim(40.0, 160.0)  # set the y-axis limits
-pyplot.grid()  # set a background grid to improve readability
-pyplot.plot(t, z, label='Numerical',
-            color='C0', linestyle='-', linewidth=2)
-pyplot.plot(t, z_exact, label='Analytical',
-            color='C1', linestyle='-', linewidth=2)
-pyplot.legend();  # set the legend
-pyplot.show()
+a = twoDimEulerMethod(0.0,100.0,0.02,[z0,b0])
+EulerMethodPlot(a[0],a[1])
