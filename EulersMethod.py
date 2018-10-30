@@ -1,3 +1,6 @@
+import numpy
+from matplotlib import pyplot
+
 g = 9.81
 zt = 100.0
 
